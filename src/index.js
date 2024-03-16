@@ -1,11 +1,13 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
-const CONSUMER = 'orderly';
-const AUTH_URL = `http://${process.env.LOAD_BALANCER_IP_ADDRESS}/kong/config`;
+const { CONSUMER, AUTH_URL } = process.env;
 
 exports.handler = async (_, res) => {
   try {
+    if (!CONSUMER || !AUTH_URL)
+      throw new Error('Please check your .env configuration');
+
     const url = `${AUTH_URL}/consumers/${CONSUMER}/jwt`;
     const { data } = await axios.get(url, {});
 
