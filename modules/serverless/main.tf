@@ -1,6 +1,6 @@
 data "archive_file" "function_zip" {
   type        = "zip"
-  source_dir  = "${path.root}/src"
+  source_dir  = "${path.root}"
   output_path = "${path.module}/function.zip"
 }
 
@@ -20,4 +20,9 @@ resource "google_cloudfunctions_function" "default" {
   trigger_http          = true
   entry_point           = "handler"
   depends_on            = [google_storage_bucket_object.function_zip]
+
+  environment_variables = {
+    CONSUMER = var.consumer
+    AUTH_URL = var.auth_url
+  }
 }
