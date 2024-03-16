@@ -6,7 +6,7 @@ const { CONSUMER, AUTH_URL } = process.env;
 exports.handler = async (_, res) => {
   try {
     if (!CONSUMER || !AUTH_URL)
-      throw new Error('Please check your .env configuration');
+      throw new Error('Please check your environment configuration.');
 
     const url = `${AUTH_URL}/consumers/${CONSUMER}/jwt`;
     const { data: response } = await axios.get(url, {});

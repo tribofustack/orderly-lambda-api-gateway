@@ -16,3 +16,12 @@ variable "bucket_name" {
   type = string
   default = "my-functions-source-bucket"
 }
+
+variable "consumer" {
+  type = string
+}
+
+variable "auth_url" {
+  type = string
+}
+
