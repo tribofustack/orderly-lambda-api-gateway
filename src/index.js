@@ -1,5 +1,5 @@
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
+const axios = require('axios');
+const jwt = require('jsonwebtoken');
 
 const { CONSUMER, AUTH_URL } = process.env;
 
