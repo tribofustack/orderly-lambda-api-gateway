@@ -1,0 +1,36 @@
+name: Apply
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
+      TF_VAR_auth_url: ${{ secrets.AUTH_URL }}
+      TF_VAR_consumer: ${{ secrets.CONSUMER }}
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CRED }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Auth GCloud
+        uses: google-github-actions/auth@v2.1.2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CRED }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
