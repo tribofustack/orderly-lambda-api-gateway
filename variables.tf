@@ -9,7 +9,7 @@ variable "region" {
 
 variable "zone" {
   type    = string
-  default = "us-central1-a"
+  default = "us-central1-c"
 }
 
 variable "bucket_name" {
@@ -19,6 +19,7 @@ variable "bucket_name" {
 
 variable "consumer" {
   type = string
+  default = "orderly"
 }
 
 variable "auth_url" {
