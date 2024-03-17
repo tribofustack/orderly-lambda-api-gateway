@@ -4,13 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  destroy:
+  apply:
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_project_id: ${{ secrets.PROJECT_ID }}
-      TF_VAR_auth_url: ${{ secrets.AUTH_URL }}
-      TF_VAR_consumer: ${{ secrets.CONSUMER }}
-      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CRED }}
 
     steps:
       - uses: actions/checkout@v2
@@ -18,7 +13,8 @@ jobs:
       - name: Auth GCloud
         uses: google-github-actions/auth@v2.1.2
         with:
-          credentials_json: ${{ secrets.GOOGLE_CRED }}
+          credentials_json: ${{ secrets.CREDENTIALS }}
+          create_credentials_file: true
 
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -27,7 +23,16 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init
-        run: terraform init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.CREDENTIALS }}
+        run: |
+          terraform init \
+          -backend-config="bucket=${{ vars.BUCKET_NAME }}" \
+          -backend-config="prefix=terraform/serveless" \
+          -upgrade
 
       - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.CREDENTIALS }}
+        run: |
+          terraform destroy -auto-approve
