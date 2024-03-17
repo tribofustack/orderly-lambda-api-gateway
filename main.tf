@@ -15,6 +15,8 @@ module "storage" {
   source     = "./modules/storage"
   project_id = var.project_id
   region     = var.region
+
+  depends_on = [ google_project_service.cloudfunctions, google_project_service.storage, google_project_service.cloudbuild ]
 }
 
 module "serverless" {
@@ -24,4 +26,6 @@ module "serverless" {
   consumer    = var.consumer
   auth_url    = var.auth_url
   bucket_name = module.storage.bucket_name
+
+  depends_on = [ module.storage ]
 }
