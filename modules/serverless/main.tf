@@ -20,8 +20,7 @@ resource "google_cloudfunctions_function" "default" {
   trigger_http          = true
   entry_point           = "handler"
   depends_on            = [
-    google_storage_bucket_object.function_zip, 
-    google_project_iam_member.artifact_registry_reader
+    google_storage_bucket_object.function_zip
   ]
   
   environment_variables = {
