@@ -25,10 +25,7 @@ resource "google_cloudfunctions_function" "default" {
   source_archive_object = google_storage_bucket_object.function_zip.name
   trigger_http          = true
   entry_point           = "handler"
-  depends_on            = [
-    google_storage_bucket_object.function_zip, 
-    google_project_iam_member.artifact_registry_reader
-  ]
+  depends_on            = [ google_storage_bucket_object.function_zip ]
   
   environment_variables = {
     CONSUMER = var.consumer
