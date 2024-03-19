@@ -3,7 +3,7 @@
  * @param {string} cpf The CPF number as a string.
  * @return {boolean} True if the CPF is valid, false otherwise.
  */
-export const isValidCPF = cpf => {
+module.exports = isValidCPF = cpf => {
   if (!/^\d{11}$/.test(cpf) || /^(\d)\1{10}$/.test(cpf)) return false;
 
   const calculateCheckDigit = (cpf, factor) =>
