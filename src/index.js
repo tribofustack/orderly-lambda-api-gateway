@@ -1,7 +1,7 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 
-const { isValidCPF } = require('./utils/cpf');
+const isValidCPF = require('./utils/cpf.js');
 
 const { CONSUMER, AUTH_URL } = process.env;
 
