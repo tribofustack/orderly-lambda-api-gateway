@@ -4,12 +4,6 @@ data "archive_file" "function_zip" {
   output_path = "${path.module}/function.zip"
 }
 
-resource "google_project_iam_member" "artifact_registry_reader" {
-  project = var.project_id
-  role    = "roles/artifactregistry.reader"
-  member  = "serviceAccount:${google_cloudfunctions_function.default.service_account_email}"
-}
-
 resource "google_storage_bucket_object" "function_zip" {
   name   = "function.zip"
   bucket = var.bucket_name
@@ -25,10 +19,22 @@ resource "google_cloudfunctions_function" "default" {
   source_archive_object = google_storage_bucket_object.function_zip.name
   trigger_http          = true
   entry_point           = "handler"
-  depends_on            = [ google_storage_bucket_object.function_zip ]
+  depends_on            = [
+    google_storage_bucket_object.function_zip, 
+    google_project_iam_member.artifact_registry_reader
+  ]
   
   environment_variables = {
     CONSUMER = var.consumer
     AUTH_URL = var.auth_url
   }
+}
+
+resource "google_cloudfunctions_function_iam_member" "invoker" {
+  project        = google_cloudfunctions_function.default.project
+  region         = google_cloudfunctions_function.default.region
+  cloud_function = google_cloudfunctions_function.default.name
+
+  role   = "roles/cloudfunctions.invoker"
+  member = "allUsers"
 }
